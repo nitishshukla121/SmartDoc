@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: documind
+
+  # ===== DATABASE =====
+  datasource:
+    url: jdbc:postgresql://localhost:5432/documind
+    username: documind_user
+    password: documind_pass
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update          # auto-creates tables on startup
+    show-sql: false             # set true if you want to see SQL in console
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  # ===== FILE UPLOAD =====
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB       # max PDF size
+      max-request-size: 50MB
+
+  # ===== VIRTUAL THREADS (Java 21) =====
+  threads:
+    virtual:
+      enabled: true             # enables VirtualThreads globally
+
+  # ===== SPRING AI — GEMINI =====
+  ai:
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY}          # set in .env or env variable
+        chat:
+          options:
+            model: gemini-2.0-flash         # fast + cheap for RAG
+            temperature: 0.2                # low = more factual answers
+            max-output-tokens: 2048
+
+    # ===== SPRING AI — CHROMA VECTOR STORE =====
+    vectorstore:
+      chroma:
+        host: localhost
+        port: 8000
+        initialize-schema: true             # auto-creates collections
+
+    # ===== EMBEDDING MODEL =====
+    # Gemini embedding for turning text chunks into vectors
+    embedding:
+      google:
+        genai:
+          api-key: ${GEMINI_API_KEY}
+          options:
+            model: text-embedding-004       # Google's best embedding model
+
+# ===== APP CONFIG =====
+app:
+  upload-dir: ./uploads                     # where PDFs are stored on disk
+  chunk-size: 800                           # characters per chunk
+  chunk-overlap: 150                        # overlap between chunks
+  top-k-retrieval: 5                        # chunks fetched per query
+  max-history-messages: 10                  # messages kept in context window

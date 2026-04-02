@@ -1,0 +1,14 @@
+spring:
+  jpa:
+    show-sql: true              # see all SQL when developing
+
+  ai:
+    vectorstore:
+      chroma:
+        host: localhost
+        port: 8000
+
+logging:
+  level:
+    com.example.documind: DEBUG
+    org.springframework.ai: DEBUG  # see what Spring AI is doing
