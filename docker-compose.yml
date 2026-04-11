@@ -1,42 +1,19 @@
 version: '3.8'
 
 services:
-
-  # ===== POSTGRESQL =====
   postgres:
-    image: postgres:16
-    container_name: documind-postgres
+    image: pgvector/pgvector:pg16
+    container_name: smartdoc-postgres
     environment:
-      POSTGRES_DB: documind
-      POSTGRES_USER: documind_user
-      POSTGRES_PASSWORD: documind_pass
+      POSTGRES_DB: smartdoc
+      POSTGRES_USER: smartdoc_user
+      POSTGRES_PASSWORD: smartdoc_pass
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U documind_user -d documind"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  # ===== CHROMADB =====
-  chroma:
-    image: chromadb/chroma:latest
-    container_name: documind-chroma
-    ports:
-      - "8000:8000"
-    volumes:
-      - chroma_data:/chroma/chroma
-    environment:
-      - IS_PERSISTENT=TRUE          # persist embeddings across restarts
-      - ANONYMIZED_TELEMETRY=FALSE
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
 
 volumes:
   postgres_data:
-  chroma_data:

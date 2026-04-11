@@ -4,8 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-@EnableAsync        // needed for CompletableFuture concurrent processing
-@EnableScheduling 
+
+@EnableAsync // needed for CompletableFuture concurrent processing
+@EnableScheduling
 @SpringBootApplication
 public class SmartDocApplication {
 
